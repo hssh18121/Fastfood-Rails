@@ -37,7 +37,7 @@
       display: flex;
       justify-content: space-evenly;
       position: relative;
-
+      height: 100vh;
       background-image: linear-gradient(
           rgba(34, 34, 34, 0.603),
           rgba(34, 34, 34, 0.603)
@@ -148,7 +148,55 @@
       font-weight: 600;
       text-align: center;
     }
+    body {
 
+  position: relative;
+}
+
+.show-modal {
+
+  cursor: pointer;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  font-size: 5rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.hidden {
+  display: none;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+
+
+  padding: 6rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  font-size: 1.8rem;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 5;
+}
 </style>
   <body>
 
@@ -219,8 +267,75 @@
         <% end %>
         <%= total %>VND</p>
       <hr style="margin-top: 20px">
-      <%= button_to "Checkout", checkout_path, class: "orange-button" %>
+
+      <button class="orange-button show-modal">Buy now!</button>
       <%= button_to "Continue shopping", products_path, class: "green-button", method: :get  %>
+
     </div>
+    <section class="section-cta modal hidden" style="background:none; padding: 0px; overflow: hidden">
+    <div >
+      <div class="cta">
+        <button class="close-modal">&times;</button>
+        <div class="cta-text-box">
+          <h2 class="heading-secondary">Get your first meal for free!</h2>
+          <p class="cta-text">
+            Healthy, tasty and hassle-free meals are waiting for you. Start
+            eating well today. You can cancel or pause anytime. And the
+            first meal is on us!
+          </p>
+
+          <form class="cta-form" action="/checkout" method="post">
+            <div>
+              <label for="full-name">Full Name</label>
+              <input
+                id="full-name"
+                type="text"
+                placeholder="John Smith"
+
+              />
+            </div>
+
+            <div>
+              <label for="phone">Your phone number</label>
+              <input
+                id="phone"
+                type="phone"
+                placeholder="0123 456 789"
+
+              />
+            </div>
+
+
+            <div>
+              <label for="address">Your address</label>
+              <input
+                id="address"
+                type="address"
+                placeholder="123 Street 1 District"
+
+              />
+            </div>
+
+            <%= button_to "Checkout", checkout_path, class: "btn btn--form"%>
+
+
+          </form>
+
+        </div>
+        <div
+          class="cta-img-box"
+          role="img"
+          aria-label="Woman enjoying food"
+          style="background-image: url(assets/meal-8.jpg)"
+        ></div>
+      </div>
+    </div>
+  </section>
   </main>
+
+    <div class="overlay hidden"></div>
 </body>
+
+<script>
+
+</script>

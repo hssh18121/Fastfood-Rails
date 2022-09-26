@@ -21,20 +21,20 @@ class UsersController < ApplicationController
   end
 
   # POST /users or /users.json
-  def create
-    @user = User.new(user_params)
+  def create_user
+    @user = User.new
+    @user.account = params[:account]
+    @user.name = params[:name]
+    @user.email = params[:email]
+    @user.phone = params[:phone]
+    @user.password = params[:password]
+    @user.save
+    redirect_to login_path
+  end
 
-    respond_to do |format|
-      if @user.save
-        session[:user_id] = @user.id
-        flash[:notice] = "Welcome to the website #{@user.account}, you have successfully signed up"
-        format.html { redirect_to user_url(@user), notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
+  def new_user
+    @user = User.new
+
   end
 
   # PATCH/PUT /users/1 or /users/1.json
@@ -59,7 +59,13 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  def update_profile
+    @user = User.find(params[:id])
+    @user.name = params[:name]
+    @user.email = params[:email]
+    @user.phone = params[:phone]
+    @user.save
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user

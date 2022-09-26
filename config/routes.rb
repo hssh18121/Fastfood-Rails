@@ -22,4 +22,7 @@ Rails.application.routes.draw do
   get "favourites", to: 'products#favourites'
   post "products/add_to_favourite/:id", to: "products#add_to_favourite", as: "add_to_favourite"
   delete "products/remove_from_favourite/:id", to: "products#remove_from_favourite", as: "remove_from_favourite"
+  post "update_profile/:id", to: 'users#update_profile'
+  get "register", to: 'users#new'
+  post 'register', to: 'users#create_user'
 end

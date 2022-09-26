@@ -106,7 +106,7 @@ section {
     <header>
       <nav class="container">
         <% if logged_in? %>
-          <div><%= link_to 'LOGOUT', logout_path, data: {"turbo-method": :delete}, style: "color: #fff" %></div>
+          <div><%= link_to 'LOGOUT', logout_path, method: :post, data: {"turbo-method": :delete}, style: "color: #fff" %></div>
         <% else %>
           <div><%= link_to 'LOGIN', login_path, style: "color: #fff" %></div>
         <% end %>
