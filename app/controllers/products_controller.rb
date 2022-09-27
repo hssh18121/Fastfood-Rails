@@ -93,12 +93,12 @@ class ProductsController < ApplicationController
       ],
 
         line_items: [
-
+          ["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"],
 
         ],
 
     )
-    @r.render_line_items([["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"]])
+
     $product_checkout_details.each do |product_checkout_detail|
 
       @r.render_line_items([[product_checkout_detail.name, product_checkout_detail.price, product_checkout_detail.quantity, product_checkout_detail.price*product_checkout_detail.quantity]])
