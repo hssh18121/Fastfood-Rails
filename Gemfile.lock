@@ -208,7 +208,7 @@ GEM
       prawn-table (~> 0.2.1)
     red-colors (0.3.0)
       matrix
-    regexp_parser (2.5.0)
+    regexp_parser (2.6.0)
     reline (0.3.1)
       io-console (~> 0.5)
     rexml (3.2.5)
