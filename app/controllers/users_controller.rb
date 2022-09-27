@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
-  before_action :require_user, except: [:new, :create, :show, :index]
+  before_action :require_user, except: [:new, :create, :show, :index, :create_user, :new_user]
   before_action :require_same_user, only: [:edit, :update, :destroy]
   # GET /users or /users.json
   def index
@@ -28,6 +28,7 @@ class UsersController < ApplicationController
     @user.email = params[:email]
     @user.phone = params[:phone]
     @user.password = params[:password]
+    @user.admin = false
     @user.save
     redirect_to login_path
   end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :user_receipts
   resources :favourite_managers
   resources :product_checkout_details
   resources :receipts
@@ -10,7 +11,7 @@ Rails.application.routes.draw do
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'
-  get "checkout", to: "products#new_checkout"
+  get "checkout/:id", to: "products#new_checkout"
   get "cart", to: 'products#cart'
   post "checkout", to: "products#checkout"
   post "products/add_to_cart/:id", to: "products#add_to_cart", as: "add_to_cart"

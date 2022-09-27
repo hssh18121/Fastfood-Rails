@@ -1,3 +1,3 @@
 
 <h1>Checkout successfully</h1>
-<%= link_to "Show", "http://localhost:3000/checkout.pdf" %>
+<%= link_to @user_receipt.name, rails_blob_path(@user_receipt.file, disposition: "attachment") %>

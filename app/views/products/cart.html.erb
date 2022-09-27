@@ -284,42 +284,28 @@
             first meal is on us!
           </p>
 
-          <form class="cta-form" action="/checkout" method="post">
+
+          <%= form_with(url: checkout_path, local: true, method: :post, class: "cta-form") do |form| %>
             <div>
               <label for="full-name">Full Name</label>
-              <input
-                id="full-name"
-                type="text"
-                placeholder="John Smith"
-
-              />
+              <%= form.text_field :name, size: "30", placeholder: "Nguyen Van Abc"%>
             </div>
 
             <div>
               <label for="phone">Your phone number</label>
-              <input
-                id="phone"
-                type="phone"
-                placeholder="0123 456 789"
-
-              />
+              <%= form.text_field :phone, size: "30", placeholder: "092 1234 849"%>
             </div>
 
 
             <div>
               <label for="address">Your address</label>
-              <input
-                id="address"
-                type="address"
-                placeholder="123 Street 1 District"
-
-              />
+              <%= form.text_field :address, size: "30", placeholder: "So 1 Dai Co Viet"%>
             </div>
 
-            <%= button_to "Checkout", checkout_path, class: "btn btn--form"%>
+            <%= button_to "Checkout", checkout_path, method: :post, class: "btn btn--form"%>
+            <% end %>
 
 
-          </form>
 
         </div>
         <div

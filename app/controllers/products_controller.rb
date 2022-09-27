@@ -2,6 +2,7 @@ class ProductsController < ApplicationController
 
   before_action :require_user, except: [:show, :index, :search, :filter]
   before_action :require_admin, except: [:show, :index, :add_to_cart, :remove_from_cart, :checkout, :new_checkout, :add_quantity, :subtract_quantity, :add_to_favourite, :remove_from_favourite]
+
   def add_to_cart
     id = params[:id].to_i
     session[:cart] << id unless session[:cart].include?(id)
@@ -41,61 +42,80 @@ class ProductsController < ApplicationController
     @product_checkout_detail.save
     redirect_to cart_path
   end
-
+  $product_checkout_details
   def checkout
+    @user_receipt = UserReceipt.new
       @product_checkout_details = ProductCheckoutDetail.all
+      $product_checkout_details = ProductCheckoutDetail.all.clone
       total = 0
     if @product_checkout_details.present?
       @product_checkout_details.each do |product_checkout_detail|
         product_checkout_detail.save
         total = product_checkout_detail.price * product_checkout_detail.quantity + total
       end
-      puts total
-      session[:cart] = nil
-      ProductCheckoutDetail.delete_all
-      redirect_to checkout_path
+
+
     end
+    @user_receipt.name = params[:name]
+    @user_receipt.phone = params[:phone]
+    @user_receipt.address = params[:address]
+    @user_receipt.total = total
+    @user_receipt.save
+    redirect_to "http://localhost:3000/checkout/#{@user_receipt.id}"
   end
 
   def new_checkout
+    id = params[:id].to_i
+    @user_receipt = UserReceipt.find_by(id: id)
+    @product_checkout_details = ProductCheckoutDetail.all
+
     @r = Receipts::Receipt.new(
 
       details: [
         ["Receipt Number", "123"],
         ["Date paid", Date.today],
-        ["Payment method", "ACH super long super long super long super long super long"]
+        ["Payment method", "Cash"]
       ],
       company: {
-        name: "Example, LLC",
-        address: "123 Fake Street\nNew York City, NY 10012",
-        email: "support@example.com",
+        name: @user_receipt.name,
+        address: @user_receipt.address,
+        email: @user_receipt.phone,
 
       },
       recipient: [
-        "Customer",
-        "Their Address",
-        "City, State Zipcode",
-        nil,
-        "customer@example.org"
+
+          "Customer",
+          "Their Address",
+          "City, State Zipcode",
+          nil,
+          "customer@example.org"
+
       ],
 
         line_items: [
-          ["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"],
-          ["Some random name", "$19.00", "1", "$19.00"],
-          [nil, nil, "Subtotal", "$19.00"],
-          [nil, nil, "Tax", "$1.12"],
-          [nil, nil, "Total", "$20.12"],
-          [nil, nil, "<b>Amount paid</b>", "$20.12"],
-          [nil, nil, "Refunded on #{Date.today}", "$5.00"]
+
+
         ],
 
-      footer: "Thanks for your business. Please contact us if you have any questions."
     )
+    @r.render_line_items([["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"]])
+    $product_checkout_details.each do |product_checkout_detail|
+
+      @r.render_line_items([[product_checkout_detail.name, product_checkout_detail.price, product_checkout_detail.quantity, product_checkout_detail.price*product_checkout_detail.quantity]])
+
+    end
+    @r.render_footer("Thank you for testing the function of this website")
     respond_to do |format|
       format.html
       format.json
       format.pdf{send_data @r.render, disposition: :inline}
     end
+    @r.render_file "app/assets/file/receipt#{@user_receipt.id}.pdf"
+    @user_receipt.file.attach(io: File.open("app/assets/file/receipt#{@user_receipt.id}.pdf"), filename: "receipt#{@user_receipt.id}.pdf")
+    @user_receipt.save
+    ProductCheckoutDetail.delete_all
+    session[:cart] = nil
+
   end
   # GET /products or /products.json
   def index
