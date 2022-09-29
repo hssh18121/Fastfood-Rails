@@ -6,7 +6,7 @@
       <nav class="main-nav">
         <ul class="main-nav-list">
           <li><a class="main-nav-link show-modal">Manage account</a></li>
-          <li><a class="main-nav-link" href="#meals">Meals</a></li>
+          <li><a class="main-nav-link" href="/user_receipts">Order history</a></li>
           <% if logged_in? %>
           <li><%= link_to 'Log out', logout_path, method: :post, data: {"turbo-method": :delete}, class: "main-nav-link" %></li>
           <% else %>

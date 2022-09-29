@@ -60,7 +60,9 @@ class ProductsController < ApplicationController
     @user_receipt.phone = params[:phone]
     @user_receipt.address = params[:address]
     @user_receipt.total = total
+    @user_receipt.user_id = current_user.id
     @user_receipt.save
+    session[:cart] = nil
     redirect_to "http://localhost:3000/checkout/#{@user_receipt.id}"
   end
 
@@ -77,28 +79,27 @@ class ProductsController < ApplicationController
         ["Payment method", "Cash"]
       ],
       company: {
-        name: @user_receipt.name,
-        address: @user_receipt.address,
-        email: @user_receipt.phone,
+        name: "Fastfood",
+        address: "So 1 Dai Co Viet",
+        email: "Fastfood@gmail.com",
 
       },
       recipient: [
 
-          "Customer",
-          "Their Address",
-          "City, State Zipcode",
+          @user_receipt.name,
+          @user_receipt.address,
+          @user_receipt.phone,
           nil,
-          "customer@example.org"
+          current_user.email
 
       ],
 
         line_items: [
-          ["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"],
-
+          [nil, nil, nil, nil],
         ],
 
     )
-
+    @r.render_line_items([["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"]])
     $product_checkout_details.each do |product_checkout_detail|
 
       @r.render_line_items([[product_checkout_detail.name, product_checkout_detail.price, product_checkout_detail.quantity, product_checkout_detail.price*product_checkout_detail.quantity]])
@@ -110,11 +111,11 @@ class ProductsController < ApplicationController
       format.json
       format.pdf{send_data @r.render, disposition: :inline}
     end
-    @r.render_file "app/assets/file/receipt#{@user_receipt.id}.pdf"
-    @user_receipt.file.attach(io: File.open("app/assets/file/receipt#{@user_receipt.id}.pdf"), filename: "receipt#{@user_receipt.id}.pdf")
+    @r.render_file "receipt#{@user_receipt.id}.pdf"
+    @user_receipt.file.attach(io: File.open("receipt#{@user_receipt.id}.pdf"), filename: "receipt#{@user_receipt.id}.pdf")
     @user_receipt.save
     ProductCheckoutDetail.delete_all
-    session[:cart] = nil
+
 
   end
   # GET /products or /products.json
@@ -195,9 +196,7 @@ class ProductsController < ApplicationController
     id = params[:id].to_i
     @favourite_manager.product_id = id
     @favourite_manager.save
-    respond_to do |format|
-      format.js {render inline: "location.reload();"}
-    end
+    redirect_to products_path
   end
 
   def remove_from_favourite
@@ -205,9 +204,7 @@ class ProductsController < ApplicationController
     @favourite_manager = FavouriteManager.find_by(user_id: current_user.id, product_id: id)
     @favourite_manager.destroy
 
-    respond_to do |format|
-      format.js {render inline: "location.reload();"}
-    end
+    redirect_to products_path
   end
 
   def favourites

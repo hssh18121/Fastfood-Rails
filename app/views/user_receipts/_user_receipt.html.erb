@@ -21,5 +21,7 @@
 
   <p>
     <strong>Show details: </strong>
+    <% if user_receipt.file.previewable? %>
     <%= link_to user_receipt.name, rails_blob_path(user_receipt.file, disposition: "inline") %>
+    <% end %>
 </div>

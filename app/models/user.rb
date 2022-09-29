@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :receipts
+  has_many :user_receipts, dependent: :destroy
   has_many :favourite_managers
   has_many :products, through: :favourite_managers
   validates :account, presence: true, uniqueness: {case_sensitive: false}, length: {minimum: 3, maximum: 25}
