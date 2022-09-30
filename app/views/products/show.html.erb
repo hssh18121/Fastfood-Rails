@@ -25,21 +25,21 @@
           </div>
           <div class="display-info">
             <p class="meal-name">Name: <%= @product.name %></p>
-            <p class="meal-price">Price: <%= @product.price %> VND</p>
+
             <ul class="meal-info-list">
               <li></li>
               <li class="meal-info">
-                <span class="meal-attribute-info">Description: </span>
+                <span class="meal-attribute-info"><b>Description: </b></span>
                 We are a technology company first, but with a major focus on
                 consumer well-being through a healthy diet.
               </li>
               <li class="meal-info">
-                <span class="meal-attribute-info">Category: </span>
-                Dessert
+                <span class="meal-attribute-info"><b>Category: </b></span>
+                <%= Category.find_by(id: @product.category_id).name %>
               </li>
               <li class="meal-info">
-                <span class="meal-attribute-info">Price: </span>
-                30000VND
+                <span class="meal-attribute-info"><b>Price: </b><%= @product.price %> </span>
+
               </li>
             </ul>
             <div class="two-buttons-container">
@@ -50,7 +50,7 @@
             </div>
           </div>
         </div>
-        <a href="#" class="cart--info--backlink">
+        <a href="/products" class="cart--info--backlink">
           &larr; Back to all products</a
         >
       </div>

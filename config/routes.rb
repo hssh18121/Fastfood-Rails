@@ -26,4 +26,6 @@ Rails.application.routes.draw do
   post "update_profile/:id", to: 'users#update_profile'
   get "register", to: 'users#new'
   post 'register', to: 'users#create_user'
+  get "change_password", to: 'users#change_password'
+  post "change_password", to: 'users#save_change_password'
 end

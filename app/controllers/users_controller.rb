@@ -67,6 +67,28 @@ class UsersController < ApplicationController
     @user.phone = params[:phone]
     @user.save
   end
+
+  def change_password
+  end
+
+  def save_change_password
+    if current_user.authenticate(params[:old_password]) != false
+      if params[:new_password] == params[:new_password_confirmation]
+        user = User.find_by(id: current_user.id)
+        user.password = params[:new_password]
+        user.save!
+        flash[:notice] = "Changed password successfully"
+        redirect_to products_path
+      else
+        flash[:notice] = "New password and password confirmation not match"
+        render 'change_password'
+      end
+    else
+      flash[:notice] = "Password incorrect!"
+      render 'change_password'
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
