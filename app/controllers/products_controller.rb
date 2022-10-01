@@ -1,7 +1,8 @@
 class ProductsController < ApplicationController
 
-  before_action :require_user, except: [:show, :index, :search, :filter]
-  before_action :require_admin, except: [:show, :index, :add_to_cart, :remove_from_cart, :checkout, :new_checkout, :add_quantity, :subtract_quantity, :add_to_favourite, :remove_from_favourite]
+  before_action :require_user, except: [:favourites, :show, :index, :search, :filter]
+  before_action :require_admin, except: [:cart, :favourites, :search, :sort, :show, :index, :add_to_cart, :remove_from_cart, :checkout, :new_checkout, :add_quantity, :subtract_quantity,
+  :add_to_favourite, :remove_from_favourite, :add_to_favourite2, :remove_from_favourite2]
 
   def add_to_cart
     id = params[:id].to_i
@@ -120,7 +121,8 @@ class ProductsController < ApplicationController
   end
   # GET /products or /products.json
   def index
-    @products = Product.all
+    @products = Product.paginate(page: params[:page], per_page: 8)
+
     @product_checkout_details = ProductCheckoutDetail.all
   end
 
@@ -133,6 +135,12 @@ class ProductsController < ApplicationController
       @products = Product.order(:price)
     elsif params[:value].to_i == 2
       @products = Product.order(price: :desc)
+    elsif params[:value].to_i == 3
+      @products = Product.where('price > 25000 AND price < 50000').order(price: :asc)
+    elsif params[:value].to_i == 4
+      @products = Product.where('price > 50000 AND price < 100000').order(price: :asc)
+    elsif params[:value].to_i == 5
+      @products = Product.where('price > 100000').order(price: :asc)
     end
   end
   # GET /products/1 or /products/1.json
@@ -205,6 +213,23 @@ class ProductsController < ApplicationController
     @favourite_manager.destroy
 
     redirect_to products_path
+  end
+
+  def add_to_favourite2
+    @favourite_manager = FavouriteManager.new
+    @favourite_manager.user_id = current_user.id
+    id = params[:id].to_i
+    @favourite_manager.product_id = id
+    @favourite_manager.save
+    redirect_to favourites_path
+  end
+
+  def remove_from_favourite2
+    id = params[:id].to_i
+    @favourite_manager = FavouriteManager.find_by(user_id: current_user.id, product_id: id)
+    @favourite_manager.destroy
+
+    redirect_to favourites_path
   end
 
   def favourites

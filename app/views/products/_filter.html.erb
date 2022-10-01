@@ -85,8 +85,12 @@
         <form class="f-sort" action="/sort">
           <span class="sort-by">Sort by:</span
           ><select class="form-control" id="value" name="value" onchange ="this.form.submit()">
+            <option value="0">Filter option</option>
             <option value="1">Price from low to high</option>
             <option value="2">Price from high to low</option>
+            <option value="3">from 25000 to 50000</option>
+            <option value="4">from 50000 to 100000</option>
+            <option value="5">from 100000 and above</option>
           </select>
         </form>
       </div>

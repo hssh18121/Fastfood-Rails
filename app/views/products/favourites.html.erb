@@ -38,17 +38,17 @@
                 </li>
                 <div class="meal-price">
                   <% if FavouriteManager.find_by(user_id: current_user.id, product_id: favourite_manager.product.id) == nil %>
-                    <%= button_to add_to_favourite_path(favourite_manager.product), method: :post, style: "background: none; border: none; padding: 0" do %>
+                    <%= button_to add_to_favourite2_path(favourite_manager.product), method: :post, style: "background: none; border: none; padding: 0" do %>
                       <ion-icon
                     name="heart-outline"
-                    style="color: #fd7e14; width: 28px; height: 28px"
+                    style="color: #f03e3e; width: 28px; height: 28px"
                   ></ion-icon>
                     <% end %>
                   <% else %>
-                    <%= button_to remove_from_favourite_path(favourite_manager.product), method: :delete, style: "background: none; border: none; padding: 0" do %>
+                    <%= button_to remove_from_favourite2_path(favourite_manager.product), method: :delete, style: "background: none; border: none; padding: 0" do %>
                       <ion-icon
                     name="heart"
-                    style="color: #fd7e14; width: 28px; height: 28px"
+                    style="color: #f03e3e; width: 28px; height: 28px"
                   ></ion-icon>
                     <% end %>
                   <% end %>
@@ -66,6 +66,5 @@
     <%= render 'manage-account'%>
   </body>
 
-<%= link_to "New product", new_product_path, style: "font-size:30px" %>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

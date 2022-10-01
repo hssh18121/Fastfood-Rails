@@ -11,12 +11,12 @@
   }
 </style>
 <div class="meal" id="meal">
-            <%= image_tag product.image, class: "meal-img", id: "meal-img" %>
+            <%= image_tag product.image, class: "meal-img", id: "meal-img", style: "height: 180px" %>
             <div class="meal-content" id="meal-content">
               <div class="meal-tags">
                 <span class="tag tag--<%=Category.find_by(:id => product.category_id).name.downcase%>"><%= Category.find_by(:id => product.category_id).name.downcase %></span>
               </div>
-              <p class="meal-title" id = "meal-title"><%= product.name %></p>
+              <p class="meal-title" id = "meal-title" style="height: 46px"><%= product.name %></p>
               <ul class="meal-attributes">
 
                 <li class="meal-attribute">
