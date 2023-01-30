@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
 
   before_action :require_user, except: [:favourites, :show, :index, :search, :filter]
   before_action :require_admin, except: [:cart, :favourites, :search, :sort, :show, :index, :add_to_cart, :remove_from_cart, :checkout, :new_checkout, :add_quantity, :subtract_quantity,
-  :add_to_favourite, :remove_from_favourite, :add_to_favourite2, :remove_from_favourite2]
+  :add_to_favourite, :remove_from_favourite, :add_to_favourite2, :remove_from_favourite2, :remove_product_in_cart]
 
   def add_to_cart
     id = params[:id].to_i
@@ -19,7 +19,9 @@ class ProductsController < ApplicationController
     id = params[:id].to_i
     session[:cart].delete(id)
     @product_checkout_detail = ProductCheckoutDetail.find_by(name: Product.find(id).name)
-    @product_checkout_detail.destroy
+    if @product_checkout_detail.present?
+      @product_checkout_detail.destroy
+    end
     redirect_to products_path
   end
 
@@ -36,13 +38,24 @@ class ProductsController < ApplicationController
   end
 
   def subtract_quantity
-
     id = params[:id].to_i
     @product_checkout_detail = ProductCheckoutDetail.find_by(id: id)
-    @product_checkout_detail.quantity -= 1
+    if(@product_checkout_detail.quantity >= 1)
+      @product_checkout_detail.quantity -= 1
+    end
     @product_checkout_detail.save
     redirect_to cart_path
   end
+
+  def remove_product_in_cart
+    id = params[:id].to_i
+    cart_id = Product.find_by(name: ProductCheckoutDetail.find_by(id: id).name).id
+    session[:cart].delete(cart_id)
+    @product_checkout_detail = ProductCheckoutDetail.find_by(id: id)
+    @product_checkout_detail.destroy
+    redirect_to cart_path
+  end
+
   $product_checkout_details
   def checkout
     @user_receipt = UserReceipt.new
@@ -100,13 +113,16 @@ class ProductsController < ApplicationController
         ],
 
     )
-    @r.render_line_items([["<b>Item</b>", "<b>Unit Cost</b>", "<b>Quantity</b>", "<b>Amount</b>"]])
-    $product_checkout_details.each do |product_checkout_detail|
+    # @r.text("<font size='10' width='1000'>hello this is a test function</font> <font size='10'>hello this is a test function 2</font>", :inline_format => true, :single_line => true )
+    # @r.text("<font size='10'>hello this is a test function 2</font>", :inline_format => true)
+        @r.render_line_items([["<b>Here is your order detail:</b>"]])
+    $product_checkout_details.each_with_index do |product_checkout_detail, index|
 
-      @r.render_line_items([[product_checkout_detail.name, product_checkout_detail.price, product_checkout_detail.quantity, product_checkout_detail.price*product_checkout_detail.quantity]])
+
+      @r.render_footer("<b>Item #{index + 1}</b>: #{product_checkout_detail.name}\nPrice: #{product_checkout_detail.price}\nQuantity: #{product_checkout_detail.quantity}\nTotal: #{product_checkout_detail.price * product_checkout_detail.quantity}")
 
     end
-    @r.render_footer("Thank you for testing the function of this website")
+    @r.render_footer("<b>Total price: #{@user_receipt.total }</b>")
     respond_to do |format|
       format.html
       format.json

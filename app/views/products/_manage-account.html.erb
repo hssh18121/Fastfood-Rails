@@ -9,7 +9,7 @@
         </p>
 
 
-
+        <% if logged_in? %>
         <form class="cta-form" action="/update_profile/<%=current_user.id%>" method="post">
           <div>
             <label for="full-name">Your name</label>
@@ -48,7 +48,7 @@
           <button type="submit" class="btn btn--form close">Edit profile</button>
 
         </form>
-
+        <% end %>
       </div>
 
     </div>

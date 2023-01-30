@@ -14,18 +14,11 @@
       <%= render 'filter' %>
       <div
         class="container grid grid--4-cols margin-bottom-md"
-        id="card-container"
-      >
+        id="card-container">
         <% @products.each do |product| %>
 
           <%= render 'product', product: product %>
         <% end %>
-
-
-
-
-
-
       </div>
     </main>
   </body>

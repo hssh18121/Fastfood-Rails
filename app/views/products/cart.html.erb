@@ -37,7 +37,7 @@
       display: flex;
       justify-content: space-evenly;
       position: relative;
-      height: 100vh;
+      min-height: 100vh;
       background-image: linear-gradient(
           rgba(34, 34, 34, 0.603),
           rgba(34, 34, 34, 0.603)
@@ -245,12 +245,12 @@
                 </div></td>
                 <td><%= product_checkout_detail.price.to_i * product_checkout_detail.quantity.to_i %> VND</td>
                 <td style="text-align: center">
-                  <a href="#"
-                    ><ion-icon
+                <%= button_to remove_product_in_cart_path(product_checkout_detail), method: :delete, style: "background: none; border: none; padding: 0" do %>
+                    <ion-icon
                       name="trash-bin"
                       style="color: red; width: 30px; height: 30px"
                     ></ion-icon
-                  ></a>
+                  ><% end %>
                 </td>
               </tr>
             <% end %>

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   delete "products/remove_from_cart/:id", to: "products#remove_from_cart", as: "remove_from_cart"
   post "product_checkout_details/add_quantity/:id", to: "products#add_quantity", as: "add_quantity"
   post "product_checkout_details/subtract_quantity/:id", to: "products#subtract_quantity", as: "subtract_quantity"
+  delete "product_checkout_details/remove_product_in_cart/:id", to: "products#remove_product_in_cart", as: "remove_product_in_cart"
   get "search", to: "products#search"
   get "sort", to: "products#sort"
   get "favourites", to: 'products#favourites'
